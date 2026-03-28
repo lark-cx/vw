@@ -1,0 +1,70 @@
+services:
+
+  vaultwarden:
+    # Pin by digest — get current digest: docker inspect --format='{{.RepoDigests}}' vaultwarden/server:latest
+    image: vaultwarden/server:latest@sha256:REPLACE_WITH_CURRENT_DIGEST
+    container_name: vaultwarden
+    restart: unless-stopped
+    runtime: runsc
+    volumes:
+      - ./vw-data:/data
+    environment:
+      DOMAIN: "https://ward.lrk.cx"
+      DATABASE_URL: "data/vaultwarden.db"
+      SIGNUPS_ALLOWED: "false"
+      INVITATIONS_ALLOWED: "false"
+      ADMIN_TOKEN: "${ADMIN_TOKEN}"
+      LOGIN_RATELIMIT_MAX_BURST: "10"
+      LOGIN_RATELIMIT_SECONDS: "60"
+      ADMIN_RATELIMIT_MAX_BURST: "5"
+      ADMIN_RATELIMIT_SECONDS: "60"
+      LOG_LEVEL: "warn"
+      EXTENDED_LOGGING: "true"
+      LOG_FILE: "/data/vaultwarden.log"
+      TZ: America/Phoenix
+    networks:
+      - internal
+    security_opt:
+      - no-new-privileges:true
+      - apparmor=docker-vaultwarden
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,noexec
+      - /run:size=32m
+    mem_limit: 256m
+    cpus: 0.5
+
+  caddy:
+    # Pin by digest
+    image: caddy-coraza:latest
+    container_name: caddy
+    restart: unless-stopped
+    runtime: runsc
+    ports:
+      - "80:80"
+      - "10.255.255.2:443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy-data:/data
+      - ./caddy-config:/config
+    networks:
+      - internal
+    depends_on:
+      - vaultwarden
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    mem_limit: 128m
+    cpus: 0.25
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
