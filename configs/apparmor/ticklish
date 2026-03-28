@@ -1,0 +1,35 @@
+#/etc/apparmor.d/abstractions/ticklish
+# vim:syntax=apparmor
+# ------------------------------------------------------------------
+# Explicit deny statements on particularly ticklish areas
+# DigitalOcean agents, fail2ban, etc.
+# ------------------------------------------------------------------
+
+# Secrets, privileged users, authN keys
+audit deny /etc/keys/*.key r,
+audit deny /etc/wireguard/*.key r,
+audit deny /etc/shadow r,
+audit deny /etc/sudoers r,
+audit deny /etc/sudoers.d/** r,
+audit deny /root/.ssh/** rw,
+audit deny @{HOME}/.ssh/** rw,
+
+# Shells
+audit deny /usr/bin/bash x,
+audit deny /bin/bash x,
+audit deny /usr/bin/sh x,
+audit deny /bin/sh x,
+audit deny /usr/bin/dash x,
+audit deny /bin/dash x,
+
+# Privilege escalation
+audit deny /usr/bin/sudo x,
+audit deny /bin/sudo x,
+audit deny /usr/bin/su x,
+audit deny /bin/su x,
+audit deny /usr/sbin/chroot x,
+audit deny /sbin/chroot x,
+
+# Raw networking
+audit deny network raw,
+audit deny network packet,
