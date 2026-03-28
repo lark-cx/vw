@@ -1,0 +1,55 @@
+# Last Modified: Sat Mar 28 04:42:41 2026
+# Cleaned: globbed sysfs/udev paths, removed per-attribute lines
+abi <abi/3.0>,
+
+include <tunables/global>
+
+/opt/digitalocean/bin/do-agent flags=(complain) {
+  include <abstractions/base>
+  include <abstractions/ticklish>
+
+  network inet stream,
+  network netlink raw,
+
+  /opt/digitalocean/bin/do-agent mr,
+
+  # /proc — metrics collection
+  /proc/ r,
+  /proc/*/mounts r,
+  /proc/*/net/netstat r,
+  /proc/*/net/snmp r,
+  /proc/*/net/snmp6 r,
+  /proc/*/net/softnet_stat r,
+  /proc/*/net/udp r,
+  /proc/*/net/udp6 r,
+  /proc/*/stat r,
+  /proc/diskstats r,
+  /proc/loadavg r,
+  /proc/pressure/cpu r,
+  /proc/pressure/io r,
+  /proc/pressure/memory r,
+  /proc/schedstat r,
+
+  # udev — block device metadata (device numbers can change on reattach)
+  /run/udev/data/b* r,
+
+  # sysfs — network interfaces (globbed, survives interface changes)
+  /sys/class/net/ r,
+  /sys/class/power_supply/ r,
+  /sys/class/powercap/ r,
+  /sys/class/thermal/ r,
+  /sys/class/watchdog/ r,
+  /sys/devices/pci0000:00/*/virtio*/net/eth*/** r,
+  /sys/devices/virtual/net/lo/** r,
+
+  # sysfs — CPU topology
+  /sys/devices/system/cpu/** r,
+
+  # sysfs — DMI / hardware identity
+  /sys/devices/virtual/dmi/id/ r,
+  /sys/devices/virtual/dmi/id/** r,
+
+  # sysfs — thermal
+  /sys/devices/virtual/thermal/** r,
+
+}
