@@ -1,3 +1,4 @@
+# /etc/apparmor.d/opt.digitalocean.bin.droplet-agent
 # Last Modified: Sat Mar 28 03:05:15 2026
 # Cleaned: denied net_raw + sys_admin, denied raw network, deduped binary path
 abi <abi/3.0>,
