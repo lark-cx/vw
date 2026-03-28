@@ -1,3 +1,4 @@
+# /etc/ssh/sshd_config
 # SETUP PHASE:  switch ListenAddresses once WG is confirmed
 # ListenAddress 0.0.0.0
 # PRODUCTION: WireGuard only
