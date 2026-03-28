@@ -1,0 +1,63 @@
+# Last Modified: Sat Mar 28 03:16:12 2026
+# Cleaned: globbed journal paths, added nft exec, added wildcard filter.d
+abi <abi/3.0>,
+
+include <tunables/global>
+
+/usr/bin/fail2ban-server flags=(complain) {
+  include <abstractions/base>
+  include <abstractions/python>
+  include <abstractions/ticklish>
+
+  network inet dgram,
+  network netlink raw,
+
+  /run/systemd/resolve/stub-resolv.conf r,
+  /usr/bin/fail2ban-server r,
+  /usr/bin/python3.12 ix,
+
+  # nft — fail2ban execs this to manage bans. Without it, bans silently fail.
+  /usr/sbin/nft ix,
+
+  # Config — wildcard filter.d so custom filters (nft-canary, vaultwarden) work
+  owner /etc/fail2ban/action.d/*.conf r,
+  owner /etc/fail2ban/fail2ban.conf r,
+  owner /etc/fail2ban/fail2ban.d/ r,
+  owner /etc/fail2ban/filter.d/*.conf r,
+  owner /etc/fail2ban/jail.conf r,
+  owner /etc/fail2ban/jail.local r,
+  owner /etc/fail2ban/jail.d/ r,
+  owner /etc/fail2ban/jail.d/*.conf r,
+  owner /etc/fail2ban/paths-common.conf r,
+  owner /etc/fail2ban/paths-debian.conf r,
+
+  # Name resolution
+  owner /etc/gai.conf r,
+  owner /etc/host.conf r,
+  owner /etc/hosts r,
+  owner /etc/nsswitch.conf r,
+  owner /etc/passwd r,
+
+  # Runtime
+  owner /run/fail2ban/fail2ban.pid w,
+  owner /run/fail2ban/fail2ban.sock rw,
+
+  # Database
+  owner /var/lib/fail2ban/fail2ban.sqlite3 rwk,
+
+  # Logs — own log + journal (globbed, survives machine-id changes)
+  owner /var/log/fail2ban.log w,
+  owner /var/log/journal/ r,
+  owner /var/log/journal/*/ r,
+  owner /var/log/journal/*/*.journal r,
+  owner /run/log/journal/ r,
+  owner /run/log/journal/*/ r,
+  owner /run/log/journal/*/*.journal r,
+
+  # Vaultwarden + Caddy logs for their jails
+  /srv/data/vaultwarden/vw-data/vaultwarden.log r,
+  /var/log/caddy/access.log r,
+
+  # Kernel log for nft-canary jail
+  /var/log/kern.log r,
+}
