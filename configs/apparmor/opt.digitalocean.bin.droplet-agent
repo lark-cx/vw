@@ -1,0 +1,29 @@
+# Last Modified: Sat Mar 28 03:05:15 2026
+# Cleaned: denied net_raw + sys_admin, denied raw network, deduped binary path
+abi <abi/3.0>,
+
+include <tunables/global>
+
+/opt/digitalocean/bin/droplet-agent flags=(complain) {
+  include <abstractions/base>
+  include <abstractions/ticklish>
+
+  # Capabilities — deny what a monitoring agent shouldn't need
+  # If these break functionality, the deploy script enabled DO monitoring
+  # features (backup/recovery/console) that require elevated privileges.
+  # Re-evaluate per feature rather than granting blanket sys_admin.
+  deny capability net_raw,
+  deny capability sys_admin,
+
+  network inet stream,
+  deny network inet raw,
+
+  /opt/digitalocean/bin/droplet-agent mrix,
+  owner /etc/passwd r,
+  owner /etc/ssh/sshd_config r,
+  owner /proc/*/cgroup r,
+  owner /proc/*/mountinfo r,
+  owner /sys/kernel/mm/transparent_hugepage/hpage_pmd_size r,
+
+}
+# Last Modified: Sat Mar 28 03:05:15 2026
