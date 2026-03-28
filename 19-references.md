@@ -1,0 +1,17 @@
+## References
+
+* [Arch Linux Security Wiki](https://wiki.archlinux.org/title/Security)
+* [Arch Linux AIDE](https://wiki.archlinux.org/title/AIDE)
+* [Arch Linux Docker — User Namespace Isolation](https://wiki.archlinux.org/title/Docker#User_namespace_isolation)
+* [SUSE AIDE Documentation](https://documentation.suse.com/sles/15-SP7/html/SLES-all/cha-aide.html)
+* [SUSE sysctl Hardening](https://documentation.suse.com/sles/15-SP7/html/SLES-all/cha-sec-sysctl.html)
+* [OWASP Docker Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html)
+* [nftables Hardening — Samuel Forestier](https://samuel.forestier.app/blog/security/nftables-hardening-rules-and-good-practices)
+* [Docker userns-remap Documentation](https://docs.docker.com/engine/security/userns-remap/)
+* [Docker Default Seccomp Profile](https://docs.docker.com/engine/security/seccomp/)
+* [Docker AppArmor Security Profiles](https://docs.docker.com/engine/security/apparmor/)
+* [Docker daemon.json Validation](https://docs.docker.com/reference/cli/dockerd/#validate)
+* [Docker Image Digests](https://docs.docker.com/engine/reference/commandline/image_pull/#pull-an-image-by-digest)
+* [Caddy auto_https](https://caddyserver.com/docs/caddyfile/options#auto-https)
+* [Data-at-rest Encryption](https://wiki.archlinux.org/title/Security#Data-at-rest_encryption)
+* [Encrypted Swap](https://www.dwarmstrong.org/encrypt-swap/)
