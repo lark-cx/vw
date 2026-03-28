@@ -1,0 +1,60 @@
+#/etc/fail2ban/jail.local
+[DEFAULT]
+# Allowlist — home /16, WireGuard subnet, loopback
+# Use /16 to avoid broadcasting your exact home subnet in recordings
+# Students substitute their own network prefix
+ignoreip = 127.0.0.1/8 ::1 10.255.255.0/24 10.x.0.0/16
+
+bantime   = 3600
+findtime  = 600
+maxretry  = 5
+backend   = systemd
+
+banaction          = nftables-multiport
+banaction_allports = nftables-allports
+
+# ntfy notification on every ban
+actionban = /usr/local/bin/ntfy-alert.sh \
+  "Fail2ban: <jail>" \
+  "Banned <ip> after <failures> failures on <jail>" \
+  "high"
+
+# Port 22 canary — nftables log, not sshd
+# maxretry=1: single attempt = immediate ban
+# bantime=172800: 48 hours
+[nft-canary]
+enabled   = true
+filter    = nft-canary
+logpath   = /var/log/kern.log
+maxretry  = 1
+findtime  = 86400
+bantime   = 172800
+actionban = /usr/local/bin/ntfy-alert.sh \
+  "Canary: port 22 hit" \
+  "Scanner hit port 22 from <ip> — banned 48h" \
+  "urgent"
+
+# Real SSH — port 2222, WireGuard only
+[sshd]
+enabled   = true
+port      = 2222
+logpath   = %(sshd_log)s
+maxretry  = 3
+bantime   = 86400
+
+# Vaultwarden
+[vaultwarden]
+enabled   = true
+port      = 80,443
+logpath   = /srv/data/vaultwarden/vw-data/vaultwarden.log
+maxretry  = 5
+bantime   = 3600
+
+# Caddy / WAF
+[caddy]
+enabled   = true
+port      = 80,443
+logpath   = /var/log/caddy/access.log
+maxretry  = 20
+findtime  = 300
+bantime   = 3600
