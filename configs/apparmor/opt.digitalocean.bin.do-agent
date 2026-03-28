@@ -1,3 +1,4 @@
+# /etc/apparmor.d/opt.digitalocean.bin.do-agent
 # Last Modified: Sat Mar 28 04:42:41 2026
 # Cleaned: globbed sysfs/udev paths, removed per-attribute lines
 abi <abi/3.0>,
