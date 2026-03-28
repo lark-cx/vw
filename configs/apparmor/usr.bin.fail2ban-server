@@ -1,3 +1,4 @@
+#/etc/apparmor.d/abstractions/usr.bin.fail2ban-server
 # Last Modified: Sat Mar 28 03:16:12 2026
 # Cleaned: globbed journal paths, added nft exec, added wildcard filter.d
 abi <abi/3.0>,
