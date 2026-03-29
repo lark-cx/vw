@@ -104,9 +104,9 @@ EOF
 
 # /etc/fstab — hardened mount options
 cat >> /etc/fstab << EOF
-/dev/mapper/docker-data  /var/lib/docker  ext4  defaults,nosuid,nodev              0 2
-/dev/mapper/app-data     /srv/data        ext4  defaults,nosuid,noexec,nodev        0 2
-${VOL_LOG}               /var/log         ext4  defaults,nosuid,noexec,nodev        0 2
+/dev/mapper/docker-data  /var/lib/docker  ext4  defaults,nofail,nosuid,nodev              0 2
+/dev/mapper/app-data     /srv/data        ext4  defaults,nofail,nosuid,noexec,nodev        0 2
+${VOL_LOG}               /var/log         ext4  defaults,nofail,nosuid,noexec,nodev        0 2
 EOF
 ```
 
